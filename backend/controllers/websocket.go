@@ -12,17 +12,17 @@ type WebSocketController struct {
 	beego.Controller
 }
 
-func (controller *WebSocketController) Connect()  {
+// handle web socket
+func (controller *WebSocketController) Get()  {
 	name := controller.GetString("name")
 	if len(name) == 0 {
-		controller.Redirect("/", 302)
 		return
 	}
 
-	ws, err := websocket.Upgrader{
+	ws, err := (&websocket.Upgrader{
 		ReadBufferSize: 1024,
 		WriteBufferSize: 1024,
-	}.Upgrade(controller.Ctx.ResponseWriter, controller.Ctx.Request,
+	}).Upgrade(controller.Ctx.ResponseWriter, controller.Ctx.Request,
 		nil)
 
 	if _, ok := err.(websocket.HandshakeError); ok {
