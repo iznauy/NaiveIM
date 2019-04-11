@@ -1,40 +1,59 @@
 <template>
   <div>
-    <h2>OK</h2>
-    <button @click="click">22333</button>
+    <el-form :inline="true">
+      <el-form-item label-width="0">
+        <el-input v-model="text" size="medium"></el-input>
+      </el-form-item>
+      <el-form-item label-width="0">
+        <el-button type="primary" @click="click" size="small">发送</el-button>
+      </el-form-item>
+    </el-form>
+    <div style="width: 400px; margin: 10px auto 10px">
+      <message v-for="(data, index) in messages" v-bind="data" :key="messages.length - index"></message>
+    </div>
   </div>
 </template>
 
 <script>
 
+  import Message from "@/components/Message"
+
   export default {
     name: "ChatRoom",
+    components: {
+      Message
+    },
     data() {
-      messages: []
-      ws: null
+      return {
+        messages: [],
+        ws: null,
+        text: ""
+      }
     },
     methods: {
       click() {
-        this.ws.send("ojbk")
+        this.ws.send(this.text);
+        this.text = "";
       },
       init() {
+        console.log(this.messages);
         this.ws = new WebSocket("ws://localhost:8080/room?name=" + this.$store.getters.name);
-        this.ws.onopen = function () {
-          this.ws.send("ok");
-          alert("数据发送中");
+
+        this.ws.onmessage = e => {
+          this.messages.unshift(JSON.parse(e.data))
         };
 
-        this.ws.onmessage = function (event) {
-          let received_msg = event.data;
-          alert(received_msg);
-        };
 
-        this.ws.onclose = function () {
-          alert("关闭！")
-        };
+
+        this.ws.onclose = e => {
+          this.$alert("服务器出现异常", "", {
+            confirmButtonText: '确定'});
+          this.$router.push("/")
+        }
       }
     },
     created() {
+      this.messages = []
       this.init()
     }
   }
