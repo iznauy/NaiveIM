@@ -12,8 +12,8 @@ type LoginController struct {
 func (control *LoginController) Post() {
 	name := control.GetString("name")
 	if len(name) == 0 {
-		control.Redirect("/ok", 302)
+		control.Ctx.WriteString("error")
 		return
 	}
-	control.Redirect("/room", 302)
+	control.Ctx.WriteString("ok")
 }
