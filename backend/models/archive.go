@@ -1,6 +1,8 @@
 package models
 
-import "container/list"
+import (
+	"container/list"
+)
 
 type EventType int
 

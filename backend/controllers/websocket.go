@@ -22,6 +22,9 @@ func (controller *WebSocketController) Get()  {
 	ws, err := (&websocket.Upgrader{
 		ReadBufferSize: 1024,
 		WriteBufferSize: 1024,
+		CheckOrigin: func(r *http.Request) bool {
+			return true
+		},
 	}).Upgrade(controller.Ctx.ResponseWriter, controller.Ctx.Request,
 		nil)
 
@@ -31,7 +34,7 @@ func (controller *WebSocketController) Get()  {
 	} else if err != nil {
 		return
 	}
-
+	
 	Join(name, ws)
 	defer Leave(name)
 

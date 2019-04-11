@@ -38,10 +38,10 @@ func Leave(name string) {
 func isNewUser(name string) bool {
 	for ele := subscribers.Front(); ele != nil; ele = ele.Next() {
 		if ele.Value.(Subscriber).Name == name {
-			return true
+			return false
 		}
 	}
-	return false
+	return true
 }
 
 func chatroom() {
